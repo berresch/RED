@@ -1,0 +1,10 @@
+#!/bin/bash
+
+/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+/sbin/iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+/sbin/iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+
+ip addr del 10.34.1.10/16 dev eth1
+ip link set eth1 master docker0
+
+exit 0
